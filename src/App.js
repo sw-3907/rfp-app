@@ -5,7 +5,7 @@ import Header from "./components/Header";
 import SearchBar from "./components/SearchBar";
 import JobCard from "./components/Job/JobCard";
 import { default as NewJobModal } from "./components/Job/NewJobModal";
-import { firestore } from "./firebase/config";
+import { firestore, app } from "./firebase/config";
 
 export default () => {
 const [jobs, setJobs] = useState([])
@@ -21,8 +21,16 @@ const [jobs, setJobs] = useState([])
     postedOn: job.data().postedOn 
   }));
   
-  setJobs(tempJobs)
+    setJobs(tempJobs);
+   
   };
+
+  const postRFP = async rfpDetails => {
+    await firestore.collection('rfps').add({
+      ...rfpDetails,
+      postedOn: app.firestore.FieldValue.serverTimestamp()
+    })
+  }
 
   useEffect(() => {
     fetchJobs();
@@ -39,7 +47,7 @@ const [jobs, setJobs] = useState([])
   return (
     <ThemeProvider theme={theme}>
       <Header handleOpen={handleOpen} />
-      <NewJobModal open={openModal} closeModal={handleClose} />
+      <NewJobModal postRFP={postRFP} open={openModal} closeModal={handleClose} />
       <Grid container justify="center">
         <Grid item xs={10}>
           <SearchBar />

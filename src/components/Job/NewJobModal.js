@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
     Box, 
     Grid, 
-    Typography,
     FilledInput, 
+    Typography,
     Select, 
-    MenuItem, 
+    MenuItem,
     Dialog, 
     DialogTitle, 
     DialogContent, 
@@ -34,7 +34,45 @@ const useStyles = makeStyles((theme) => ({
             color: "#fff",
         },
     },
+    included: {
+        backgroundColor: theme.palette.secondary.main,
+        color: "#fff",
+    }
 }));
+
+const NewJobModal = (props) => {
+    const classes = useStyles();
+
+const [rfpDetails, setRfpDetails] = useState({
+    title: "",
+    type: "Full time",
+    companyName: "",
+    companyUrl: "",
+    location: "Remote",
+    link: "",
+    description: "",
+    skills: [],
+});
+
+const handleChange = e => {
+    e.persist();
+    setRfpDetails(oldState => ({ ...oldState, [e.target.name]: e.target.value }));
+}
+
+const addRemoveSkill = skill => 
+    rfpDetails.skills.includes(skill)
+    ? setRfpDetails(oldState => ({ 
+        ...oldState, 
+        skills: oldState.skills.filter((s) => s !== skill ), 
+    }))
+    : setRfpDetails(oldState => ({ 
+        ...oldState, 
+        skills: oldState.skills.concat(skill), 
+    }));
+    
+const handleSubmit = async (props) => {
+    await props.postRFP(rfpDetails);
+};
 
 const skills = [
     "marketing",
@@ -44,9 +82,6 @@ const skills = [
     "strategy",
     "policy",
 ];
-
-const NewJobModal = (props) => {
-    const classes = useStyles();
 
     const handleClose = () => {
         props.closeModal();
@@ -65,40 +100,90 @@ const NewJobModal = (props) => {
             <DialogContent>
                 <Grid container spacing={2}>
                     <Grid item xs={6}> 
-                        <FilledInput placeholder="RFP title *" disableUnderline fullWidth />
+                        <FilledInput 
+                        onChange={handleChange}
+                        name="title"
+                        value={rfpDetails.title} 
+                        placeholder="RFP title *" 
+                        disableUnderline 
+                        fullWidth />
                     </Grid>
                     <Grid item xs={6}>
-                        <Select fullWidth disableUnderline variant="filled" defaultValue="Full time">
+                        <Select 
+                          onChange={handleChange}
+                          name="type"
+                          value={rfpDetails.type}  
+                          fullWidth 
+                          disableUnderline 
+                          variant="filled" 
+                          defaultValue="Full time">
                             <MenuItem value="Full time">Full time</MenuItem>
                             <MenuItem value="Part time">Part time</MenuItem>
                             <MenuItem value="Contract">Contract</MenuItem>
                         </Select>
                     </Grid>
                     <Grid item xs={6}>
-                        <FilledInput placeholder="Org name *" disableUnderline fullWidth />
+                        <FilledInput  
+                        onChange={handleChange}
+                        name="companyName"
+                        value={rfpDetails.companyName}  
+                        placeholder="Org name *" 
+                        disableUnderline 
+                        fullWidth />
                     </Grid>
                     <Grid item xs={6}>
-                        <FilledInput placeholder="Org URL *" disableUnderline fullWidth />
+                        <FilledInput  
+                        onChange={handleChange}
+                        name="companyUrl"
+                        value={rfpDetails.companyUrl} 
+                        placeholder="Org URL *" 
+                        disableUnderline 
+                        fullWidth />
                     </Grid>
                     <Grid item xs={6}>
-                        <Select fullWidth disableUnderline variant="filled" defaultValue="Remote">
+                        <Select 
+                        onChange={handleChange}
+                        name="location"
+                        value={rfpDetails.location} 
+                        fullWidth 
+                        disableUnderline 
+                        variant="filled" 
+                        defaultValue="Remote">
                             <MenuItem value="Remote">Remote</MenuItem>
                             <MenuItem value="In Office">In Office</MenuItem>
                             <MenuItem value="Contract">Contract</MenuItem>
                         </Select>
                     </Grid>
                     <Grid item xs={6}>
-                        <FilledInput placeholder="Org URL *" disableUnderline fullWidth />
+                        <FilledInput 
+                        onChange={handleChange}
+                        name="link"
+                        value={rfpDetails.link}  
+                        placeholder="Link to RFP *" 
+                        disableUnderline 
+                        fullWidth />
                     </Grid>
                     <Grid item xs={12}>
-                        <FilledInput placeholder="Job Description *" disableUnderline fullWidth multiline />
+                        <FilledInput  
+                        onChange={handleChange}
+                        name="description"
+                        value={rfpDetails.description} 
+                        placeholder="Job Description *" 
+                        disableUnderline 
+                        fullWidth 
+                        multiline />
                     </Grid>
                 </Grid>
                 <Box mt={2}>
                     <Typography>Skills</Typography>
                     <Box display="flex">
                         {skills.map((skill) => (
-                            <Box className={classes.skillChip} key={skill}>{skill}</Box>
+                            <Box onClick={() => addRemoveSkill(skill)} 
+                            className={`${classes.skillChip} ${rfpDetails.skills.includes(skill) && classes.included}`}
+                            key={skill}
+                            >
+                            {skill}
+                            </Box>
                         ))}
                     </Box>
                 </Box>
@@ -106,7 +191,7 @@ const NewJobModal = (props) => {
             <DialogActions>
                 <Box color="red" width="100%" display="flex" justifyContent="space-between" alignItems="center">
                 <Typography variant="caption">*Required fields</Typography>
-                <Button variant="contained" disabledElecation color="primary">Submit RFP</Button>
+                <Button onClick={() => handleSubmit(props)} variant="contained" disabledElecation color="primary">Submit RFP</Button>
             </Box>
         </DialogActions>
     </Dialog>

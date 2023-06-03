@@ -40,19 +40,22 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const NewJobModal = (props) => {
-    const classes = useStyles();
+const initState = {
+  title: "",
+  type: "Full time",
+  companyName: "",
+  companyUrl: "",
+  location: "Remote",
+  link: "",
+  description: "",
+  skills: [],
+};
 
-const [rfpDetails, setRfpDetails] = useState({
-    title: "",
-    type: "Full time",
-    companyName: "",
-    companyUrl: "",
-    location: "Remote",
-    link: "",
-    description: "",
-    skills: [],
-});
+const NewJobModal = (props) => {
+const classes = useStyles();
+
+const [ loading, setloading ] = useState(false);
+const [rfpDetails, setRfpDetails] = useState(initState);
 
 const handleChange = e => {
     e.persist();
@@ -70,8 +73,17 @@ const addRemoveSkill = skill =>
         skills: oldState.skills.concat(skill), 
     }));
     
-const handleSubmit = async (props) => {
+const handleSubmit = async () => {
+    setloading(true);
     await props.postRFP(rfpDetails);
+    setloading(false);
+    closeModal();
+};
+
+const closeModal = () => {
+    setRfpDetails(initState)
+    setloading(false);
+    props.closeModal();
 };
 
 const skills = [

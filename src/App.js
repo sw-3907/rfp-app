@@ -29,8 +29,9 @@ const [jobs, setJobs] = useState([])
     await firestore.collection('rfps').add({
       ...rfpDetails,
       postedOn: app.firestore.FieldValue.serverTimestamp()
-    })
-  }
+    });
+    fetchJobs();
+  };
 
   useEffect(() => {
     fetchJobs();
@@ -47,7 +48,10 @@ const [jobs, setJobs] = useState([])
   return (
     <ThemeProvider theme={theme}>
       <Header handleOpen={handleOpen} />
-      <NewJobModal postRFP={postRFP} open={openModal} closeModal={handleClose} />
+      <NewJobModal 
+        postRFP={postRFP} 
+        open={openModal} 
+        closeModal={handleClose} />
       <Grid container justify="center">
         <Grid item xs={10}>
           <SearchBar />

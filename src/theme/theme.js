@@ -1,6 +1,6 @@
 import { createMuiTheme } from "@material-ui/core";
 
-const primary = "#18E1D9";
+const primary = "#18e1a7";
 const secondary = "#0B0B15";
 
 /* createMuiTheme is a function that passes in your custom stylings*/
@@ -16,7 +16,7 @@ export default createMuiTheme({
       main: secondary,
     },
   },
-  overrides: { /* I don't really get overriding the default Material UI stylings */
+  overrides: { 
     MuiDialogActions: {
       root: {
         padding: "8px 24px 16px 24px",

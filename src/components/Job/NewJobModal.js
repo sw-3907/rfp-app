@@ -13,6 +13,7 @@ import {
     makeStyles, 
     Button,
     IconButton,
+    CircularProgress,
 } from '@material-ui/core';
 
 import { Close as CloseIcon } from '@material-ui/icons';
@@ -59,8 +60,11 @@ const [rfpDetails, setRfpDetails] = useState(initState);
 
 const handleChange = e => {
     e.persist();
-    setRfpDetails(oldState => ({ ...oldState, [e.target.name]: e.target.value }));
-}
+    setRfpDetails(oldState => ({ 
+      ...oldState, 
+      [e.target.name]: e.target.value 
+    }));
+};
 
 const addRemoveSkill = skill => 
     rfpDetails.skills.includes(skill)
@@ -203,7 +207,17 @@ const skills = [
             <DialogActions>
                 <Box color="red" width="100%" display="flex" justifyContent="space-between" alignItems="center">
                 <Typography variant="caption">*Required fields</Typography>
-                <Button onClick={() => handleSubmit(props)} variant="contained" disabledElecation color="primary">Submit RFP</Button>
+                <Button 
+                  onClick={handleSubmit} 
+                  variant="contained" 
+                  disableElevation 
+                  color="primary"
+                  disabled={loading}>
+                    {loading ? (<CircularProgress color="secondary" size={22} />
+                    ) : (
+                        "Submit RFP"
+                    )}
+                </Button>
             </Box>
         </DialogActions>
     </Dialog>

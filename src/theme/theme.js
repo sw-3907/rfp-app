@@ -1,7 +1,7 @@
 import { createMuiTheme } from "@material-ui/core";
 
 const primary = "#18e1a7";
-const secondary = "#0B0B15";
+const secondary = "#192841";
 
 /* createMuiTheme is a function that passes in your custom stylings*/
 export default createMuiTheme({

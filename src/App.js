@@ -82,9 +82,8 @@ const [viewJobModal, setViewJobModal] = useState({});
         closeModal={handleClose} />
       <ViewJobModal 
         job={viewJobModal} 
-        // closeModal={() => setViewJobModal({})}
-        open={openModal} 
-        closeModal={handleClose} />
+        open={!!Object.keys(viewJobModal).length} 
+        closeModal={() => setViewJobModal({})} />
       <Box my={5} >
       <Grid container justify="center">
         <Grid item xs={10}>

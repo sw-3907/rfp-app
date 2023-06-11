@@ -39,12 +39,16 @@ const useStyles = makeStyles((theme) => ({
 export default props => {
     const classes = useStyles();
 
+    const handleClose = () => {
+        props.closeModal();
+      };
+
     return (
         <Dialog open={!!Object.keys(props.job).length} fullWidth>
             <DialogTitle>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     {props.job.title} @ {props.job.companyName}
-                    <IconButton >
+                    <IconButton onClick={handleClose}>
                         <CloseIcon />
                     </IconButton>
                 </Box>
@@ -76,7 +80,7 @@ export default props => {
                     </Box>
                     <Box className={classes.info} display="flex">
                         <Typography variant="body2">website:</Typography>
-                        <Typography variant="body2">{props.job.companyURL}</Typography>
+                        <Typography variant="body2">{props.job.companyUrl}</Typography>
                     </Box>
                     <Box ml={0.5}>
                         <Typography variant="body2">Skills:</Typography>

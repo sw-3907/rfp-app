@@ -17,8 +17,14 @@ import {
 } from '@material-ui/core';
 
 import { Close as CloseIcon } from '@material-ui/icons';
+import skills from '../skills';
 
 const useStyles = makeStyles((theme) => ({
+    skillChipContainer: {
+        width: '100%',
+        overflowX: 'auto',
+      },
+
     skillChip: {
         margin: theme.spacing(0.5),
         padding: theme.spacing(0.75),
@@ -43,10 +49,10 @@ const useStyles = makeStyles((theme) => ({
 
 const initState = {
   title: "",
-  type: "Full time",
+  type: "Duration",
   companyName: "",
   companyUrl: "",
-  location: "Remote",
+  location: "West Coast",
   link: "",
   description: "",
   skills: [],
@@ -57,9 +63,11 @@ const classes = useStyles();
 
 const [ loading, setloading ] = useState(false);
 const [rfpDetails, setRfpDetails] = useState(initState);
+const [initialValueSelected, setInitialValueSelected] = useState(true);
 
 const handleChange = e => {
     e.persist();
+    setInitialValueSelected(false);
     setRfpDetails(oldState => ({ 
       ...oldState, 
       [e.target.name]: e.target.value 
@@ -90,14 +98,20 @@ const closeModal = () => {
     props.closeModal();
 };
 
-const skills = [
-    "marketing",
-    "graphic design",
-    "social media",
-    "video",
-    "strategy",
-    "policy",
-];
+// const skills = [
+//     "marketing",
+//     "web design",
+//     "graphic design",
+//     "climate",
+//     "social media",
+//     "video",
+//     "strategy",
+//     "policy",
+//     "healthcare",
+//     "agriculture",
+//     "public speaking",
+//     "web development"
+// ];
 
     const handleClose = () => {
         props.closeModal();
@@ -131,11 +145,16 @@ const skills = [
                           value={rfpDetails.type}  
                           fullWidth 
                           disableUnderline 
-                          variant="filled" 
-                          defaultValue="Full time">
-                            <MenuItem value="Full time">Full time</MenuItem>
-                            <MenuItem value="Part time">Part time</MenuItem>
-                            <MenuItem value="Contract">Contract</MenuItem>
+                          variant="filled"
+                          > 
+                            {initialValueSelected && (
+                              <MenuItem value="Duration" disabled>
+                              Duration
+                              </MenuItem>
+                            )}
+                            <MenuItem value="2 to 4 weeks">2 to 4 weeks</MenuItem>
+                            <MenuItem value="3 to 6 months">3 to 6 months</MenuItem>
+                            <MenuItem value="9 to 12 months">9 to 12 months</MenuItem>
                         </Select>
                     </Grid>
                     <Grid item xs={6}>
@@ -163,11 +182,11 @@ const skills = [
                         value={rfpDetails.location} 
                         fullWidth 
                         disableUnderline 
-                        variant="filled" 
-                        defaultValue="Remote">
-                            <MenuItem value="Remote">Remote</MenuItem>
-                            <MenuItem value="In Office">In Office</MenuItem>
-                            <MenuItem value="Contract">Contract</MenuItem>
+                        variant="filled" >
+                            <MenuItem value="West Coast">West Coast</MenuItem>
+                            <MenuItem value="East Coast">East Coast</MenuItem>
+                            <MenuItem value="Central">Central</MenuItem>
+                            <MenuItem value="International">International</MenuItem>
                         </Select>
                     </Grid>
                     <Grid item xs={6}>
@@ -192,6 +211,7 @@ const skills = [
                 </Grid>
                 <Box mt={2}>
                     <Typography>Skills</Typography>
+                    <Box className={classes.skillChipContainer}>
                     <Box display="flex">
                         {skills.map((skill) => (
                             <Box onClick={() => addRemoveSkill(skill)} 
@@ -201,6 +221,7 @@ const skills = [
                             {skill}
                             </Box>
                         ))}
+                    </Box>
                     </Box>
                 </Box>
             </DialogContent>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {Box, Button, Select, MenuItem, makeStyles, CircularProgress } from '@material-ui/core';
+import skills from '../skills';
 
 const useStyles = makeStyles ({
     wrapper: {
@@ -16,10 +17,26 @@ const useStyles = makeStyles ({
 })
 
 export default props => {
+//   const skills = [
+//     "marketing",
+//     "web design",
+//     "graphic design",
+//     "climate",
+//     "social media",
+//     "video",
+//     "strategy",
+//     "policy",
+//     "healthcare",
+//     "agriculture",
+//     "public speaking",
+//     "web development"
+// ];
+  
   const [loading, setLoading] = useState(false)
-  const [rfpSearch, setRfpSearch]   = useState ({
-    type: 'Full time',
-    location: 'Remote'
+
+  const [rfpSearch, setRfpSearch] = useState ({
+    skill: skills[0],
+    location: ''
   });
 
   const handleChange = e => {
@@ -36,18 +53,20 @@ const search = async () => {
   setLoading(false);
 };
 
-  const classes = useStyles ()
+  const classes = useStyles ();
+
     return (
       <Box p={2} mb={2} className={classes.wrapper}>
-        <Select onChange={handleChange} value={rfpSearch.type} name="type" disableUnderline variant="filled">
-          <MenuItem value="Full time">Full time</MenuItem>
-          <MenuItem value="Part time">Part time</MenuItem>
-          <MenuItem value="Contract">Contract</MenuItem>
-        </Select>
+        <Select onChange={handleChange} value={rfpSearch.skill} name="skill" disableUnderline variant="filled">
+        {skills.map((skill) => (
+          <MenuItem key={skill} value={skill}>{skill}</MenuItem>
+        ))}
+      </Select>
         <Select onChange={handleChange} value={rfpSearch.location} name="location"  disableUnderline variant="filled">
-          <MenuItem value="Remote">Remote</MenuItem>
-          <MenuItem value="In Office">In Office</MenuItem>
-          <MenuItem value="Contract">Contract</MenuItem>
+          <MenuItem value="West Coast">West Coast</MenuItem>
+          <MenuItem value="East Coast">East Coast</MenuItem>
+          <MenuItem value="Central">Central</MenuItem>
+          <MenuItem value="International">International</MenuItem>
         </Select>
         <Button 
         disabled={loading}

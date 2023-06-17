@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Grid, ThemeProvider, Button, CircularProgress } from "@material-ui/core";
 import theme from "./theme/theme";
 import Header from "./components/Header";
+import MenuItems from './components/Header/MenuItems';
 import SearchBar from "./components/SearchBar";
 import JobCard from "./components/Job/JobCard";
 import { default as NewJobModal } from "./components/Job/NewJobModal";
@@ -15,12 +16,13 @@ const [loading, setLoading] = useState(true);
 const [customSearch, setCustomSearch] = useState(false);
 const [newJobModal, setNewJobModal] = useState(false);
 const [viewJobModal, setViewJobModal] = useState({});
+const [menuOpen, setMenuOpen] = useState(false);
 
+const fetchJobs = async () => {
+  setCustomSearch(false);
+  setLoading(true);
 
-  const fetchJobs = async () => {
-    setCustomSearch(false);
-    setLoading(true);
-    const req = await firestore
+  const req = await firestore
     .collection('rfps')
     .orderBy('postedOn', 'desc')
     .get();
@@ -29,10 +31,10 @@ const [viewJobModal, setViewJobModal] = useState({});
     ...job.data(), 
     id: job.id, 
     postedOn: job.data().postedOn 
-  }));
+    }));
     setJobs(tempJobs);
     setLoading(false);
-  };
+};
 
   const fetchJobsCustom = async (rfpSearch) => {
     setLoading(true);
@@ -41,7 +43,7 @@ const [viewJobModal, setViewJobModal] = useState({});
     .collection('rfps')
     .orderBy('postedOn', 'desc')
     .where("location", '==', rfpSearch.location)
-    .where("type", '==', rfpSearch.type)
+    .where('skills', 'array-contains', rfpSearch.skill)
     .get();
 
   const tempJobs = req.docs.map((job) => ({ 
@@ -66,6 +68,7 @@ const [viewJobModal, setViewJobModal] = useState({});
   }, []);
 
   const [openModal, setOpenModal] = useState(false);
+
   const handleOpen = () => {
     setOpenModal(true);
   };
@@ -73,9 +76,20 @@ const [viewJobModal, setViewJobModal] = useState({});
     setOpenModal(false);
   };
 
+  const handleMenuClick = () => {
+    setMenuOpen(true);
+  };
+
+  const handleCloseMenu = () => {
+    setMenuOpen(false);
+  };
+
   return (
     <ThemeProvider theme={theme}>
-      <Header handleOpen={handleOpen} />
+      <Header 
+        handleOpen={handleOpen}
+        handleMenuClick={handleMenuClick} />
+        {menuOpen && <MenuItems onClose={handleCloseMenu} />}
       <NewJobModal 
         postRFP={postRFP} 
         open={openModal} 
@@ -96,7 +110,7 @@ const [viewJobModal, setViewJobModal] = useState({});
           ) : (
           <>
           {customSearch && (
-          <Box my={2} display="flex" justifyCOntent="flex-end">
+          <Box my={2} display="flex" justifyContent="flex-start">
             <Button onClick={fetchJobs}>
               <CloseIcon size={20} />
               Reset Search
